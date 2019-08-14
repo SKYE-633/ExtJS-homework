@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>test</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+    <script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext-all.js"></script>
+    <script type="text/javascript" src="../examples.js"></script>
+
+    <script>
+        Ext.onReady(function () {
+            var tabPanel = new Ext.TabPanel({
+                renderTo: document.body,
+                height: 50,
+                activeTab: 0,
+                items: [{
+                    title: 'Tom',
+                    html: 'Tom Cat'
+                }, {
+                    title: 'Jerry',
+                    html: 'Jerry House'
+                }]
+            });
+            // tabPanel.add({
+
+            // });
+            // tabPanel.add({
+
+            // });
+            // tabPanel.activate(1);
+            ColorPlugin = function(){
+                this.init = function(cmp){
+                    cmp.bodyStyle = 'color: red';
+                };
+            };
+            var panel = new Ext.Panel({
+                renderTo: 'Test',
+                items: [
+                    {
+                        html: 'This is plugin example',
+                        plugins:[new ColorPlugin]
+                    }
+                ]
+            });
+            
+            // Ext.ns('com.ita');
+            // com.ita.CancelButton = Ext.extend(Ext.Button, {
+            //     text: 'Cancel',
+            //     style: 'background: red',
+            //     initComponent: function () {
+            //         com.ita.CancelButton.superclass.initComponent.call(this);
+            //         this.on('click', this.onButtonClick, this);
+            //     },
+            //     onButtonClick: function (oEvent) {
+            //         Ext.Msg.alert('Cancel Button', 'This is customized cancel button, you clicked me. ');
+            //     }
+            // });
+            // Ext.reg('com.ita.CancelButton', com.ita.CancelButton);
+
+            // var panel = new Ext.Panel({
+            //     renderTo: 'Test',
+            //     items: [
+            //         {
+            //             xtype: 'com.ita.CancelButton',
+            //             style: 'background: red'
+            //         }
+            //     ]
+            // });
+            // panel.render();
+
+            
+
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="Test"></div>
+</body>
+
+</html>

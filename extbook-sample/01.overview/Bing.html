@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>test</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+    <script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext-all.js"></script>
+    <script type="text/javascript" src="../examples.js"></script>
+
+    <script>
+        Ext.onReady(function () {
+            var BingLeft = new Ext.Container({
+                height: 70,
+                width: 140,
+                // colspan:1,
+                autoEl: {
+                    // style: 'width:50px; height:50px; margin-left:100px; margin-top:150px;',
+                    tag: 'img',
+                    src: './logo.png',
+                }
+            });
+            var tabPanel = new Ext.TabPanel({
+                width: 600,
+                height: 70,
+                activeTab: 0,
+                plain: true,
+                border: false,
+                items: [{
+                    title: '国内版',
+                    id: 'dome',
+                    xtype: 'textfield',
+                }, {
+                    title: '国际版',
+                    id: 'inter',
+                    xtype: 'textfield',
+                }]
+            });
+            var search = new Ext.Container({
+                id: 'search-button',
+                cls:'mouseover',
+                autoEl: {
+                    tag: 'img',
+                    style: 'margin-top:25px;margin-left:-50px;',
+                    src: './search.png'
+                }
+            })
+            
+            var container = new Ext.Container({
+                
+                style: 'margin:100px 0px 0px 100px',
+                renderTo: 'test',
+                layout: 'table',
+                layoutConfig: {
+                    columns: 3
+                },
+                items: [BingLeft, tabPanel, search]
+            });
+            var searchButton = Ext.get('search-button').on('click', function(){
+                var type = tabPanel.activeTab.title;
+                if(type == '国内版'){
+                    var value = Ext.get('dome').dom.value;
+                    window.location.href = "https://cn.bing.com//search?q=" + value ;
+                }else{
+                    var value = Ext.get('inter').dom.value;
+                    window.location.href = "https://cn.bing.com//search?q=" + value + "&ensearch=1";
+                }
+             
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="test"></div>
+</body>
+<style>
+    body {
+        background: url(th.jpg)
+    }
+    .mouseover:hover{
+        cursor: pointer;
+        background: #eeeeef;
+    }
+</style>
+
+</html>
