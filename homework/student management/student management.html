@@ -1,0 +1,133 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>student management</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+    <script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext-all.js"></script>
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            var loader = new Ext.tree.TreeLoader({ dataUrl: 'student management.txt' });
+            var addNewItems = function (node, content) {
+                var newnode = '';
+                var student = 'Add Student';
+                var clasz = 'Add Class';
+                if (content != '' && content != undefined) {
+                    student = content;
+                    clasz = content;
+                }
+                if (node.isLeaf()) {
+                    newnode = new Ext.tree.TreeNode({ text: student, leaf: true });
+                    node.parentNode.appendChild(newnode);
+                } else {
+                    if (node.text.indexOf('student management') != -1) {
+                        newnode = new Ext.tree.TreeNode({ text: clasz, leaf: false, children: [{}] });
+                    } else {
+                        newnode = new Ext.tree.TreeNode({ text: student, leaf: true });
+                    }
+                    node.appendChild(newnode);
+                }
+            };
+            var contextmenu = new Ext.menu.Menu({
+                id: 'theContextMenu',
+                items: [{
+                    text: 'delete',
+                    id: 'deleteNode'
+                },
+                {
+                    text: 'add',
+                    id: 'addNode'
+                }],
+                listeners: {
+                    itemclick: function (item) {
+                        var n = item.parentMenu.contextNode;
+                        //console.log(n)
+                        switch (item.id) {
+                            case 'deleteNode':
+                                //console.log(' you want to delete node')
+                                n.remove();
+                                break;
+                            case 'addNode':
+                                //console.log(' you want to add node')
+                                addNewItems(n);
+                                break;
+                        }
+                    }
+                }
+            });
+            var activeNode = null;
+            var tree = new Ext.tree.TreePanel({
+                id: 'tree',
+                el: 'Test',
+                loader: loader,
+                animate: true,
+                enableDD: true,
+                useArrows: true,
+                //rootVisible: false,
+                //border: false,            
+                contextMenu: contextmenu,
+                listeners: {
+                    contextmenu: function (node, e) {
+                        node.select();
+                        var c = node.getOwnerTree().contextMenu;
+                        c.contextNode = node;
+                        console.log(node)
+                        contextmenu.showAt(e.getXY());
+                    },
+                    click: function (node) {
+                        activeNode = node;
+                    }
+                }
+            });
+            tree.on('nodedrop', function (e) {
+                Ext.Msg.alert('Drag Event', 'currently dragging node:' + e.dropNode.text + ' dropping into node:' + e.target.text + ', dragging pattern is ' + e.point);
+            });
+            var treeEditor = new Ext.tree.TreeEditor(tree, { allowBlank: false }, {
+                listeners: {
+                    complete: function (editor, currVal, origVal) {
+                        Ext.Msg.alert('Student Management', 'It has been changed from ' + origVal + ' to ' + currVal);
+                    }
+                }
+            });
+            // var treeFilter = new Ext.tree.TreeFilter(tree, {
+            //     clearBlank: true,
+            //     autoClear: true
+            // });
+            // Ext.get('filter').on('click', function () {
+            //     var content = Ext.get('inputcontent').dom.value;
+            //     console.log(content);
+            //     treeFilter.filter(content);
+            // });
+            // Ext.get('reset').on('click', function () {
+            //     treeFilter.clear('');
+            // });         
+            Ext.get('add').on('click', function () {
+                var content = Ext.get('inputcontent').dom.value;
+                // if (activeNode.isLeaf()){
+                //     var node = new Ext.tree.TreeNode({ text: content, leaf: true });
+
+                // }else{
+                //     node = new Ext.tree.TreeNode({ text: content, leaf: false });
+                // }               
+                addNewItems(activeNode, content)
+            });
+            // tree.on('click', function (node) {
+            //     Ext.get('inputcontent').dom.value = ''
+            // });
+            var root = new Ext.tree.AsyncTreeNode({ text: 'student management' });
+            tree.setRootNode(root);
+            tree.render();
+            root.expand();
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="Test"></div>
+    <input type="text" id='inputcontent'>
+    <button id='add'>add</button>
+    <script type="text/javascript" src="../examples.js"></script>
+</body>
+
+</html>
