@@ -1,0 +1,179 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>blog</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+    <script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext-all.js"></script>
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            var menuReset = new Ext.menu.Menu({
+                items: [
+                    {
+                        text: 'reset',
+                    },
+                ],
+                listeners: {
+                    itemclick: function (item) {
+                        Ext.getCmp('textarea').reset(); //reset输入框
+                        Ext.getCmp('reply').setDisabled(true);
+                    }
+                }
+            });
+            var menuTable = new Ext.menu.Menu({
+                items: [
+                    {
+                        text: 'table',
+                        handler: function () {
+                            win.show();
+                        }
+                    },
+                ],
+            });
+            var win = new Ext.Window({
+                id: 'win',
+                title: '请输入行数和列数',
+                width: 250,
+                closeAction: 'hide',  //窗口的X不会完全关闭
+                items: new Ext.form.FormPanel({
+                    defaultType: 'textfield',
+                    labelWidth: 60,
+                    frame: true,
+                    items: [{
+                        fieldLabel: '行数：',
+                        id: 'row'
+                    }, {
+                        fieldLabel: '列数：',
+                        id: 'column'
+                    }],
+                    buttons: [{
+                        text: '确定',
+                        handler: function () {
+                            var row = Ext.get('row').dom.value;
+                            var column = Ext.get('column').dom.value;
+                            var table = '<table border="1">';
+                            for (var i = 1; i <= row; i++) {
+                                table += '<tr>';
+                                for (var j = 1; j <= column; j++) {
+                                    table += '<td>Skye</td>'
+                                }
+                                table += "</tr>";
+                            }
+                            table += "</table>";
+                            var tpl = new Ext.Template([
+                                table
+                            ])
+                            tpl.overwrite('table')
+
+                        }
+                    }]
+                }),
+
+            });
+            //右键菜单
+            var contextMenu = new Ext.menu.Menu({
+                items: [{ text: 'Edit', menu: menuReset },
+                {
+                    text: 'Insert',
+                    menu: menuTable
+                }]
+            });
+            Ext.get(document).on('contextmenu', function (e) {
+                e.preventDefault();
+                contextMenu.showAt(e.getXY());
+            });
+
+            var toolbar = new Ext.Toolbar({
+                renderTo: 'tb',
+                height: 30,
+                items: [
+                    {
+                        xtype: 'splitbutton',
+                        text: 'Edit',
+                        menu: menuReset
+                    },
+                    '-',
+                    {
+                        xtype: 'splitbutton',
+                        text: 'Insert',
+                        menu: menuTable
+                    },
+
+                ]
+            });
+            //进度条
+            var progressBar = new Ext.ProgressBar({
+                renderTo: 'test',
+                hidden: true,
+            });
+            var panel = new Ext.Panel({
+                renderTo: 'test',
+                // height:500,
+                // width:300,
+                cls: 'no-border',
+                autoHeight: true,
+                items: [{
+                    xtype: 'textarea',
+                    id: 'textarea',
+                    enableKeyEvents:true,
+                    height: 240,
+                    width: 480,
+                    listeners: {
+                        keyup: function () {
+                            var content = Ext.get('textarea').dom.value;
+                            console.log(content)
+                            if (content == '') {
+                                Ext.getCmp('reply').disable();
+                            } else {
+                                Ext.getCmp('reply').enable();
+                            }
+                        }
+                    }
+                },
+                {
+                    text: 'reply',
+                    xtype: 'button',
+                    id: 'reply',
+                    disabled:true,
+                    height: 50,
+                    width: 80,
+                    handler: function () {
+                        progressBar.show();
+                        progressBar.wait({
+                            interval: 300,
+                            duration: 3000,
+                            increment: 10,
+                            text: 'Wating for 3s...',
+                            fn: function () {
+                                progressBar.hide();
+                                Ext.Msg.alert('Progress', "Success!")
+                            }
+                        });
+                    }
+                }]
+
+            });
+
+
+
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="tb"></div>
+
+    <div id="test"></div>
+    <div id="table"></div>
+    <div id="ss"></div>
+    <script type="text/javascript" src="../examples.js"></script>
+</body>
+<style>
+    .no-border .x-panel-body {
+        border: none;
+    }
+</style>
+
+</html>
